@@ -1,0 +1,52 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# ghstudio
+
+Experimental tools to use git/github with RStudio, e.g see issues and diffs in the viewer
+
+## Installation
+
+install with :
+
+``` r
+remotes::install_github("moodymudskipper/ghstudio")
+```
+
+## Example
+
+```{r, eval = FALSE}
+# view single issue thread
+view_issue(1, "RDatatable/data.table")
+# view list of issues, with optional filters (see next block)
+view_issues("RDatatable/data.table") 
+
+# repo is guessed from DESCRIPTION if not provided
+view_mentions("moodymudskipper", repo = "RDatatable/data.table")
+view_created("moodymudskipper", repo = "RDatatable/data.table")
+view_assigned("moodymudskipper", repo = "RDatatable/data.table")
+# and 1st arg is optional
+options(ghstudio.github_name = "moodymudskipper")
+view_mentions(repo = "RDatatable/data.table")
+
+# view diff in viewer, only on local git project for now
+view_diff(sha1, sha2) # with more options passed to diffobj::diffFile()
+```
+
+```{r}
+library(ghstudio)
+lapply(mget(sort(getNamespaceExports("ghstudio")), inherits = TRUE), args)
+```
+
