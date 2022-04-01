@@ -68,6 +68,7 @@ view_issue <- function(id, repo = current_repo()) {
 #' @param pr A boolean, `NA` for both PRs and issues
 #' @param repo A string
 #' @param user A string
+#' @export
 #'
 #' @return Returns `NULL` invisibly, called for side effects.
 view_issues <- function(
