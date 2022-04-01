@@ -1,3 +1,8 @@
+#' @importFrom utils unzip download.file
+NULL
+
+globalVariables(c("hash1", "hash2"))
+
 
 # #' @export
 # get_git_log <- function(...) {
@@ -7,6 +12,9 @@
 #   dplyr::filter(as.data.frame(log_mat), ...)
 # }
 
+#' Current repo
+#'
+#' Fetches repo from description
 #' @export
 current_repo <- function() {
   desc <- readLines("DESCRIPTION")
@@ -18,6 +26,10 @@ get_bugreports_url <- function(repo = current_repo()) {
   file.path("https://github.com/", repo, "issues")
 }
 
+#' View issue
+#' @param id An integerish
+#' @param repo A string
+#'
 #' @export
 view_issue <- function(id, repo = current_repo()) {
   tmp <- tempfile(fileext= ".html")
@@ -43,7 +55,21 @@ view_issue <- function(id, repo = current_repo()) {
   rstudioapi::viewer(tmp)
 }
 
-#' @export
+
+#' View issues
+#'
+#' View issues in viewer, `view_assigned()`, `view_created()` and `view_mentions()`
+#'   are wrappers around `view_issues()`.
+#'
+#' @param author A string or `NULL`
+#' @param assignee A string or `NULL`
+#' @param mentions A string or `NULL`
+#' @param open A boolean, not `NA`
+#' @param pr A boolean, `NA` for both PRs and issues
+#' @param repo A string
+#' @param user A string
+#'
+#' @return Returns `NULL` invisibly, called for side effects.
 view_issues <- function(
   author = NULL,
   assignee = NULL,
@@ -93,23 +119,30 @@ view_issues <- function(
 }
 
 #' @export
+#'
+#' @rdname view_issues
 view_assigned <- function(user = github_name(), open = TRUE, pr = NA,
                           repo = current_repo()) {
   view_issues(assignee = user, open = open, pr = pr, repo = repo)
 }
 
 #' @export
+#'
+#' @rdname view_issues
 view_created <- function(user = github_name(), open = TRUE, pr = NA,
                          repo = current_repo()) {
   view_issues(author = user, open = open, pr = pr, repo = repo)
 }
 
 #' @export
+#'
+#' @rdname view_issues
 view_mentions <- function(user = github_name(), open = TRUE, pr = NA,
                           repo = current_repo()) {
   view_issues(mentions = user, open = open, pr = pr, repo = repo)
 }
 
+#' Github name
 #' @export
 github_name <- function() {
   nm <- getOption("ghstudio.github_name")
@@ -119,7 +152,7 @@ github_name <- function() {
   nm
 }
 
-#' view diff between
+#' view diff between commits
 #'
 #' @param sha1,sha2 sha or branch name
 #' @inheritParams diffobj::diffFile
@@ -154,7 +187,6 @@ view_diff <- function(
   cmd2 <- sprintf("git archive --format=zip --output=%s %s", tmp_file2, sha2)
   system(cmd1)
   system(cmd2)
-  file.exists(tmp_file2)
   # unzip both
   unzip(tmp_file1, exdir = tmp_dir1)
   unzip(tmp_file2, exdir = tmp_dir2)
@@ -177,7 +209,7 @@ view_diff <- function(
   df$file2[is.na(df$file2)] <- empty_file
 
   diff_df <- subset(df, hash1 != hash2)
-  mapply(
+  print(mapply(
     diff_df$file1,
     diff_df$file2,
     diff_df$file,
@@ -194,6 +226,6 @@ view_diff <- function(
         context = context,
         ...
       )))
-    })
+    }))
   invisible(NULL)
 }

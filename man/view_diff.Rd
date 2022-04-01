@@ -2,7 +2,7 @@
 % Please edit documentation in R/ghstudio.R
 \name{view_diff}
 \alias{view_diff}
-\title{view diff between}
+\title{view diff between commits}
 \usage{
 view_diff(
   sha1 = "HEAD",
@@ -43,5 +43,5 @@ calculation.}
 Returns \code{NULL} invisibly, called for side effects.
 }
 \description{
-view diff between
+view diff between commits
 }
